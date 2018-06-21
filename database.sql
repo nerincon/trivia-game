@@ -1,0 +1,11 @@
+CREATE TABLE games (
+  id SERIAL NOT NULL PRIMARY KEY,
+  title VARCHAR
+);
+
+CREATE TABLE users (
+  id SERIAL NOT NULL PRIMARY KEY,
+  username VARCHAR,
+  game_id INTEGER REFERENCES games (id),
+  score INTEGER
+);
