@@ -5,6 +5,19 @@ function fetchFailed () {
   console.error('Could not get json data from backend')
 }
 
+function shuffle (array) {
+  var i = 0,
+    j = 0,
+    temp = null
+
+  for (i = array.length - 1; i > 0; i -= 1) {
+    j = Math.floor(Math.random() * (i + 1))
+    temp = array[i]
+    array[i] = array[j]
+    array[j] = temp
+  }
+}
+
 class App extends Component {
   constructor () {
     super()
@@ -52,6 +65,7 @@ class App extends Component {
   }
 
   generateChoices (choices) {
+    console.log(JSON.stringify(choices))
     var renderedChoices = choices.map((choice) => {
       return (
         <option
@@ -61,6 +75,9 @@ class App extends Component {
           dangerouslySetInnerHTML={{__html: choice}} />
       )
     })
+
+    shuffle(renderedChoices)
+    console.log(renderedChoices)
     return renderedChoices
   }
 
