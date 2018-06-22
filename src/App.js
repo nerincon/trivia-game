@@ -51,13 +51,26 @@ class App extends Component {
       .catch(fetchFailed)
   }
 
+  generateChoices (choices) {
+    var renderedChoices = choices.map((choice) => {
+      return (
+        <option
+          key={choice}
+          name='choice'
+          value={choice}
+          dangerouslySetInnerHTML={{__html: choice}} />
+      )
+    })
+    return renderedChoices
+  }
+
   handleSubmit (event) {
-    const val = event.target.value
-    console.log('checked', val)
+    event.preventDefault()
+    console.log(event.target.choices.value)
   }
 
   render () {
-    const ChangeFn = this.handleSubmit.bind(this)
+    // const ChangeFn = this.handleSubmit.bind(this)
     const { error, isLoaded, questions } = this.state
     if (error) {
       return <div>Error: {error.message}</div>
@@ -66,56 +79,27 @@ class App extends Component {
     } else {
       return (
         <div>
-          {questions.map((q) => (
-            <div key={q.question}>
-              <div>
-                <h2>{q.category}</h2>
+          <div>
+            {questions.map((q, idx) => (
+              <div key={q.question}>
+                <div>
+                  <h2>{q.category}</h2>
+                </div>
+                <div>
+                  <p dangerouslySetInnerHTML={{__html: q.question}} />
+                </div>
+                <form onSubmit={this.handleSubmit}>
+                  <select name='choices'>
+                    <option>--Please choose an option--</option>
+                    {
+                      this.generateChoices(this.state.answers[idx])
+                    }
+                  </select>
+                  <button type='submit'>Submit</button>
+                </form>
               </div>
-              <div>
-                <p dangerouslySetInnerHTML={{__html: q.question}} />
-              </div>
-              <div>
-                <label>
-                  {q.correct_answer}
-                  <input
-                    name='answer'
-                    type='checkbox'
-                    onChange={ChangeFn}
-                    value={q.correct_answer} />
-                </label>
-              </div>
-              <div>
-                <label>
-                  {q.incorrect_answers[0]}
-                  <input
-                    name='incorrect_answer1'
-                    type='checkbox'
-                    onChange={ChangeFn}
-                    value={q.incorrect_answers[0]} />
-                </label>
-              </div>
-              <div>
-                <label>
-                  {q.incorrect_answers[1]}
-                  <input
-                    name='incorrect_answer2'
-                    type='checkbox'
-                    onChange={ChangeFn}
-                    value={q.incorrect_answers[1]} />
-                </label>
-              </div>
-              <div>
-                <label>
-                  {q.incorrect_answers[2]}
-                  <input
-                    name='incorrect_answer3'
-                    type='checkbox'
-                    onChange={ChangeFn}
-                    value={q.incorrect_answers[2]} />
-                </label>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )
     }
